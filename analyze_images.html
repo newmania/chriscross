@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas id="canvas" width="10" height="10"></canvas>
+<script>
+async function processImage(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, 10, 10);
+            const imageData = ctx.getImageData(0, 0, 10, 10).data;
+            const grid = [];
+            for (let i = 0; i < imageData.length; i += 4) {
+                const r = imageData[i];
+                const g = imageData[i + 1];
+                const b = imageData[i + 2];
+                // Simple luminance threshold
+                const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+                grid.push(luminance < 128 ? 1 : 0);
+            }
+            const rows = [];
+            for (let i = 0; i < 10; i++) {
+                rows.push(grid.slice(i * 10, (i + 1) * 10));
+            }
+            resolve(rows);
+        };
+        img.src = url;
+    });
+}
+
+async function run() {
+    const images = ['alex_square.JPG', 'christopher_square.jpg', 'sarahmike_square.jpg'];
+    const results = {};
+    for (const img of images) {
+        results[img] = await processImage(img);
+    }
+    console.log(JSON.stringify(results));
+}
+run();
+</script>
+</body>
+</html>
