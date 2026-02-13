@@ -8,12 +8,12 @@ const levels = [
     {
         name: "Alex",
         image: "alex_square.JPG",
-        quote: "Keep moving forward, one square at a time."
+        quote: "Watching you become a mother has been one of the greatest joys of my life."
     },
     {
         name: "Christopher",
         image: "christopher_square.jpg",
-        quote: "Precision is the key to every puzzle."
+        quote: "Our boys are completely wonderful and it's all because of you."
     },
     {
         name: "Sarah & Mike",
