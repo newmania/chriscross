@@ -6,8 +6,9 @@
 
 ## Tasks
 - [x] Initial project investigation
-- [ ] Commit initial files
-- [ ] Implement Picross game UI (10x10 grid)
-- [ ] Load level data from image analysis
-- [ ] Add game logic (checking for win condition)
-- [ ] Polish UI/UX
+- [x] Commit initial files
+- [x] Implement Picross game UI (10x10 grid)
+- [x] Load level data from image analysis (Dynamic processing in JS)
+- [x] Add game logic (checking for win condition)
+- [ ] Polish UI/UX (Add better visuals, sounds, etc.)
+- [ ] Add level completion state and transitions

@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+#game-container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#grid-layout {
+    display: grid;
+    grid-template-columns: auto 300px;
+    grid-template-rows: auto 300px;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+#col-hints {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+}
+
+#row-hints {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+#grid {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    border: 2px solid #333;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.cell.filled {
+    background-color: #333;
+}
+
+.cell.marked {
+    background-color: #fff;
+    position: relative;
+}
+
+.cell.marked::after {
+    content: "X";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: red;
+    font-weight: bold;
+}
+
+.hint-box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 5px;
+    font-size: 12px;
+}
+
+#col-hints .hint-box {
+    flex-direction: column;
+    width: 30px;
+    justify-content: flex-end;
+}
+
+#row-hints .hint-box {
+    height: 30px;
+}
+
+.hint {
+    margin: 2px;
+}
