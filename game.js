@@ -1,6 +1,26 @@
 let currentGrid = [];
 let solution = [];
 const gridSize = 10;
+let currentLevelIndex = 0;
+let isGameWon = false;
+
+const levels = [
+    {
+        name: "Alex",
+        image: "alex_square.JPG",
+        quote: "Keep moving forward, one square at a time."
+    },
+    {
+        name: "Christopher",
+        image: "christopher_square.jpg",
+        quote: "Precision is the key to every puzzle."
+    },
+    {
+        name: "Sarah & Mike",
+        image: "sarahmike_square.jpg",
+        quote: "The best puzzles are the ones we solve together."
+    }
+];
 
 async function processImage(url) {
     return new Promise((resolve) => {
@@ -46,8 +66,23 @@ function calculateHints(line) {
     return hints.length > 0 ? hints : [0];
 }
 
-async function loadLevel(imgUrl) {
-    solution = await processImage(imgUrl);
+async function loadLevel(index) {
+    if (index >= levels.length) {
+        alert("Congratulations! You've completed all levels!");
+        return;
+    }
+    
+    currentLevelIndex = index;
+    isGameWon = false;
+    const level = levels[currentLevelIndex];
+    
+    // Reset UI
+    document.getElementById('reveal-image').classList.remove('visible');
+    document.getElementById('reveal-image').src = level.image;
+    document.getElementById('post-win-container').classList.add('hidden');
+    document.getElementById('grid').style.opacity = '1';
+    
+    solution = await processImage(level.image);
     currentGrid = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
     renderGame();
 }
@@ -96,11 +131,15 @@ function renderGame() {
             cell.className = 'cell';
             cell.dataset.r = r;
             cell.dataset.c = c;
-            cell.addEventListener('click', (e) => toggleCell(r, c, e));
-            cell.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                markCell(r, c);
-            });
+            
+            if (!isGameWon) {
+                cell.addEventListener('click', (e) => toggleCell(r, c, e));
+                cell.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    markCell(r, c);
+                });
+            }
+            
             if (currentGrid[r][c] === 1) cell.classList.add('filled');
             if (currentGrid[r][c] === -1) cell.classList.add('marked');
             gridEl.appendChild(cell);
@@ -109,15 +148,18 @@ function renderGame() {
 }
 
 function toggleCell(r, c, e) {
+    if (isGameWon) return;
     if (currentGrid[r][c] === 1) {
         currentGrid[r][c] = 0;
     } else {
         currentGrid[r][c] = 1;
     }
     renderGame();
+    checkWin();
 }
 
 function markCell(r, c) {
+    if (isGameWon) return;
     if (currentGrid[r][c] === -1) {
         currentGrid[r][c] = 0;
     } else {
@@ -126,7 +168,7 @@ function markCell(r, c) {
     renderGame();
 }
 
-document.getElementById('check-win').addEventListener('click', () => {
+function checkWin() {
     let won = true;
     for (let r = 0; r < gridSize; r++) {
         for (let c = 0; c < gridSize; c++) {
@@ -138,13 +180,33 @@ document.getElementById('check-win').addEventListener('click', () => {
             }
         }
     }
-    alert(won ? "You Won!" : "Keep trying!");
+    if (won) {
+        handleWin();
+    }
+}
+
+function handleWin() {
+    isGameWon = true;
+    const level = levels[currentLevelIndex];
+    
+    // Show image and quote
+    document.getElementById('reveal-image').classList.add('visible');
+    document.getElementById('quote').textContent = level.quote;
+    document.getElementById('post-win-container').classList.remove('hidden');
+    
+    // Hide the grid or make it transparent
+    document.getElementById('grid').style.opacity = '0';
+}
+
+document.getElementById('next-level').addEventListener('click', () => {
+    loadLevel(currentLevelIndex + 1);
 });
 
 document.getElementById('reset').addEventListener('click', () => {
+    if (isGameWon) return;
     currentGrid = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
     renderGame();
 });
 
 // Initial load
-loadLevel('alex_square.JPG');
+loadLevel(0);

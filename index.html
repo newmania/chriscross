@@ -9,18 +9,19 @@
 <body>
     <div id="game-container">
         <h1>Picross</h1>
-        <div id="level-selector">
-            <button onclick="loadLevel('alex_square.JPG')">Alex</button>
-            <button onclick="loadLevel('christopher_square.jpg')">Christopher</button>
-            <button onclick="loadLevel('sarahmike_square.jpg')">Sarah & Mike</button>
-        </div>
         <div id="grid-layout">
             <div id="col-hints"></div>
             <div id="row-hints"></div>
-            <div id="grid"></div>
+            <div id="grid-wrapper">
+                <div id="grid"></div>
+                <img id="reveal-image" src="" alt="Revealed Level">
+            </div>
+        </div>
+        <div id="post-win-container" class="hidden">
+            <p id="quote"></p>
+            <button id="next-level">Next Level</button>
         </div>
         <div id="controls">
-            <button id="check-win">Check Win</button>
             <button id="reset">Reset</button>
         </div>
     </div>
