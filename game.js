@@ -138,7 +138,7 @@ function renderGame() {
                 cell.addEventListener('click', (e) => toggleCell(r, c, cell));
                 cell.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
-                    markCell(r, c);
+                    markCell(r, c, cell);
                 });
             }
             
@@ -172,8 +172,19 @@ function toggleCell(r, c, cellEl) {
     }
 }
 
-function markCell(r, c) {
+function markCell(r, c, cellEl) {
     if (isGameWon) return;
+    
+    // Check if user is trying to mark a cell that SHOULD be filled
+    if (currentGrid[r][c] === 0 && solution[r][c] === 1) {
+        // Mistake: show heart error
+        cellEl.classList.add('error');
+        setTimeout(() => {
+            cellEl.classList.remove('error');
+        }, 1000);
+        return;
+    }
+
     if (currentGrid[r][c] === -1) {
         currentGrid[r][c] = 0;
     } else if (currentGrid[r][c] === 0) {
