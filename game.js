@@ -77,8 +77,9 @@ async function loadLevel(index) {
     const level = levels[currentLevelIndex];
     
     // Reset UI
-    document.getElementById('reveal-image').classList.remove('visible');
-    document.getElementById('reveal-image').src = level.image;
+    const revealImg = document.getElementById('reveal-image');
+    revealImg.classList.remove('visible');
+    revealImg.src = ''; // Clear source for surprise
     document.getElementById('post-win-container').classList.add('hidden');
     document.getElementById('grid').style.opacity = '1';
     
@@ -129,11 +130,12 @@ function renderGame() {
         for (let c = 0; c < gridSize; c++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
+            if (r === 4) cell.classList.add('row-marker'); // 5-cell marker
             cell.dataset.r = r;
             cell.dataset.c = c;
             
             if (!isGameWon) {
-                cell.addEventListener('click', (e) => toggleCell(r, c, e));
+                cell.addEventListener('click', (e) => toggleCell(r, c, cell));
                 cell.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     markCell(r, c);
@@ -147,22 +149,34 @@ function renderGame() {
     }
 }
 
-function toggleCell(r, c, e) {
+function toggleCell(r, c, cellEl) {
     if (isGameWon) return;
-    if (currentGrid[r][c] === 1) {
+    
+    // If user clicks an empty cell that SHOULD be filled
+    if (currentGrid[r][c] === 0 || currentGrid[r][c] === -1) {
+        if (solution[r][c] === 1) {
+            currentGrid[r][c] = 1;
+            renderGame();
+            checkWin();
+        } else {
+            // Mistake: show red X
+            cellEl.classList.add('error');
+            setTimeout(() => {
+                cellEl.classList.remove('error');
+            }, 1000);
+        }
+    } else if (currentGrid[r][c] === 1) {
+        // Allow unfilling (optional, but standard)
         currentGrid[r][c] = 0;
-    } else {
-        currentGrid[r][c] = 1;
+        renderGame();
     }
-    renderGame();
-    checkWin();
 }
 
 function markCell(r, c) {
     if (isGameWon) return;
     if (currentGrid[r][c] === -1) {
         currentGrid[r][c] = 0;
-    } else {
+    } else if (currentGrid[r][c] === 0) {
         currentGrid[r][c] = -1;
     }
     renderGame();
@@ -189,12 +203,14 @@ function handleWin() {
     isGameWon = true;
     const level = levels[currentLevelIndex];
     
-    // Show image and quote
-    document.getElementById('reveal-image').classList.add('visible');
+    // Set image source ONLY now for the surprise
+    const revealImg = document.getElementById('reveal-image');
+    revealImg.src = level.image;
+    revealImg.classList.add('visible');
+    
     document.getElementById('quote').textContent = level.quote;
     document.getElementById('post-win-container').classList.remove('hidden');
     
-    // Hide the grid or make it transparent
     document.getElementById('grid').style.opacity = '0';
 }
 
