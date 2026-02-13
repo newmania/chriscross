@@ -3,37 +3,71 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #ffebee;
+    overflow: hidden;
+}
+
+#valentine-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(#ffcdd2 2px, transparent 2px);
+    background-size: 30px 30px;
+    z-index: -1;
 }
 
 #game-container {
     text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(255, 128, 171, 0.3);
+    border: 3px solid #f06292;
+    position: relative;
+    max-width: 95vw;
+}
+
+.heart-decoration {
+    font-size: 2rem;
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
     background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 0 10px;
+}
+
+h1 {
+    color: #d81b60;
+    margin-top: 0;
+    font-family: 'Brush Script MT', cursive, sans-serif;
+    font-size: 2.5rem;
 }
 
 #grid-layout {
     display: grid;
-    grid-template-columns: auto 300px;
-    grid-template-rows: auto 300px;
+    grid-template-columns: 120px 300px;
+    grid-template-rows: 120px 300px;
     gap: 0px;
-    margin-top: 20px;
-    justify-content: center;
+    margin: 20px auto;
+    width: 420px;
 }
 
 #col-hints {
     grid-column: 2;
     grid-row: 1;
     display: flex;
-    height: 100px; /* Give some space for hints */
+    background: #fce4ec;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 #row-hints {
@@ -41,7 +75,9 @@ body {
     grid-row: 2;
     display: flex;
     flex-direction: column;
-    width: 100px; /* Give some space for hints */
+    background: #fce4ec;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
 #grid-wrapper {
@@ -50,7 +86,8 @@ body {
     grid-row: 2;
     width: 300px;
     height: 300px;
-    border: 2px solid #333;
+    border: 3px solid #f06292;
+    overflow: hidden;
 }
 
 #grid {
@@ -74,7 +111,7 @@ body {
     transition: opacity 2s ease-in-out;
     z-index: 2;
     pointer-events: none;
-    background-color: #ddd;
+    background-color: #fce4ec;
 }
 
 #reveal-image.visible {
@@ -83,10 +120,17 @@ body {
 
 #post-win-container {
     margin-top: 20px;
-    padding: 15px;
-    background: #e7f3fe;
-    border-radius: 4px;
-    transition: all 0.5s ease;
+    padding: 20px;
+    background: #fce4ec;
+    border-radius: 15px;
+    border: 2px dashed #f06292;
+    animation: bounceIn 0.8s ease;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 #post-win-container.hidden {
@@ -95,47 +139,59 @@ body {
 
 #quote {
     font-style: italic;
-    font-size: 1.2em;
-    color: #555;
-    margin-bottom: 15px;
+    font-size: 1.3em;
+    color: #ad1457;
+    margin-bottom: 20px;
+    line-height: 1.4;
 }
 
-#next-level {
-    padding: 10px 20px;
-    font-size: 1em;
-    background-color: #4CAF50;
+#next-level, #reset {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    background-color: #f06292;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 30px;
     cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #c2185b;
 }
 
-#next-level:hover {
-    background-color: #45a049;
+#next-level:hover, #reset:hover {
+    background-color: #ec407a;
+    transform: translateY(-2px);
+}
+
+#next-level:active, #reset:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #c2185b;
+}
+
+#controls {
+    margin-top: 25px;
 }
 
 .cell {
     width: 30px;
     height: 30px;
-    border: 1px solid #ccc;
+    border: 1px solid #f8bbd0;
     cursor: pointer;
     box-sizing: border-box;
     position: relative;
     background-color: white;
 }
 
-/* 5-cell vertical markers */
 .cell:nth-child(10n+5) {
-    border-right: 2px solid #666;
+    border-right: 2px solid #f06292;
 }
 
-/* 5-cell horizontal markers (row 5) */
 .cell.row-marker {
-    border-bottom: 2px solid #666;
+    border-bottom: 2px solid #f06292;
 }
 
 .cell.filled {
-    background-color: #333;
+    background-color: #d81b60;
 }
 
 .cell.marked {
@@ -143,38 +199,38 @@ body {
 }
 
 .cell.marked::after {
-    content: "X";
+    content: "✕";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #aaa;
+    color: #f48fb1;
     font-weight: bold;
 }
 
 .cell.error::after {
-    content: "X";
+    content: "❤️";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: red;
-    font-weight: bold;
     font-size: 20px;
-    animation: fadeOutX 1s forwards;
+    animation: fadeOutHeart 1s forwards;
 }
 
-@keyframes fadeOutX {
+@keyframes fadeOutHeart {
     0% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
 }
 
 .hint-box {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 0 5px;
-    font-size: 12px;
+    padding: 2px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #880e4f;
 }
 
 #col-hints .hint-box {
@@ -188,5 +244,5 @@ body {
 }
 
 .hint {
-    margin: 2px;
+    margin: 1px;
 }
